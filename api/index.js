@@ -1,8 +1,11 @@
 import express from 'express'
 import auhtRouter from './routes/auth.route.js'
 import testRout from './routes/test.rout.js'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import pool from './db.js'
+import cookieParser from 'cookie-parser'
+
 
 
 
@@ -14,8 +17,15 @@ dotenv.config()
 const app = express()
 
 
+
+
 //middlewares
 app.use(express.json())
+app.use(cookieParser())
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true 
+}));
 
 
 
@@ -37,18 +47,15 @@ app.use('/api' , auhtRouter)
 app.use('/api' , testRout)
 
 //error handling midleware
-app.use((err , req , res , next)=>{
-    const statusCode = err.status || 500
-    const message = err.message || 'Internal server error'
+app.use((error,req,res,next)=>{
+  const statusCode =  error.statusCode || 500
+  const message = error.message||'Please Check Your Connecton'
 
-    return res.status(statusCode).json({
-        succssus:false,
-        statusCode,
-        message,
-
-
-    })
-})
+  return res.status(statusCode).json({
+      "success":false,
+      "statusCode":statusCode,
+      "message":message
+  })})
 
 //listing on port 3000
 app.listen(3000,()=>{

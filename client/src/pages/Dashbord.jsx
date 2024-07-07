@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import Task from '../components/Task';
 import { Link } from 'react-router-dom';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 function Dashboard() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { currentUser}=useSelector((state)=>state.user)
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -27,7 +29,7 @@ function Dashboard() {
               <img className="w-full h-full object-cover" src="" alt="User" />
             </div>
           </div>
-          <span className="text-white">userName</span>
+          <span className="text-white">{currentUser.username}</span>
         </div>
 
         <ul className="flex flex-col gap-3 text-white mb-4">

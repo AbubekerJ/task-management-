@@ -1,20 +1,49 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const Register = () => {
   const [form, setForm] = useState({});
+  const [signUpError , setSignUpError]=useState(null)
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.id]: e.target.value });
     console.log(form);
   };
 
+  const handleSubmit = async (e)=>{
+    e.preventDefault()
+      try {
+        const res =await fetch('http://localhost:3000/api/register',{
+          method:'POST',
+          headers:{
+          'Content-Type': 'application/json'
+          },
+          body:JSON.stringify(form)
+        }
+         
+        )
+        const data =await res.json()
+        
+        if(data.success===false){
+          setSignUpError(data.message)
+           return;
+        }
+        console.log(signUpError)
+        navigate('/signin')
+      } catch (error) {
+        setSignUpError(error)
+      }
+
+  }
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-200 p-6">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         <h1 className="font-semibold text-center text-4xl text-black mb-8">Sign Up</h1>
         
-        <form className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="text"
             placeholder="Username"
@@ -41,7 +70,10 @@ const Register = () => {
           >
             Register
           </button>
+         
         </form>
+        {signUpError && <div className="text-red-500 mt-4">{signUpError}</div>}
+       
         
         <div className="flex mt-3 gap-1">
           <p className="text-gray-600">Have an Account?</p>

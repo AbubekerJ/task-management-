@@ -1,6 +1,6 @@
 import React from 'react'
 
-function DoItNow() {
+function Pending() {
   return (
     <div>
       do it noe page 
@@ -8,4 +8,4 @@ function DoItNow() {
   )
 }
 
-export default DoItNow
+export default Pending
