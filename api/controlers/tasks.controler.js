@@ -64,7 +64,7 @@ export const updateTask = async (req, res, next) => {
   const { title, description, status, assigned_to } = req.body;
 
   try {
-    // Fetch the task to check the creator
+  
     const taskQuery = await pool.query('SELECT * FROM tasks WHERE id = $1', [Taskid]);
     const task = taskQuery.rows[0];
 
@@ -72,12 +72,11 @@ export const updateTask = async (req, res, next) => {
       return next(createError(404, 'Task Not Found'));
     }
 
-    // Check if the user is the creator of the task
+  
     if (req.user.id !== task.created_by) {
       return next(createError(401, 'You can only update your task'));
     }
 
-    // Proceed with updating the task if the user is authorized
     const result = await pool.query(
       'UPDATE tasks SET title = $1, description = $2, status = $3, assigned_to = $4 WHERE id = $5 RETURNING *',
       [title, description, status, assigned_to, Taskid]
@@ -95,17 +94,31 @@ export const updateTask = async (req, res, next) => {
 
 
 
-//get user task and assined task
 
+
+// Fetch tasks created by or assigned to the user, optionally filtered by status and sorted by date
 export const getUserTasks = async (req, res, next) => {
   const userId = req.user.id;
+  const { status, sort } = req.query;
+  
+  let query = 'SELECT * FROM tasks WHERE created_by = $1 OR assigned_to = $1';
+  const params = [userId];
+
+  // Add status filter if provided
+  if (status) {
+    query += ' AND status = $2';
+    params.push(status);
+  }
+
+  // Add sorting if provided
+  if (sort === 'oldest') {
+    query += ' ORDER BY created_at ASC';
+  } else if (sort === 'latest') {
+    query += ' ORDER BY created_at DESC';
+  }
 
   try {
-    const result = await pool.query(
-      'SELECT * FROM tasks WHERE created_by = $1 OR assigned_to = $1',
-      [userId]
-    );
-
+    const result = await pool.query(query, params);
     res.status(200).json(result.rows);
   } catch (error) {
     next(error);
