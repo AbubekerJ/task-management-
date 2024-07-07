@@ -2,6 +2,7 @@ import express from 'express'
 import auhtRouter from './routes/auth.route.js'
 import testRout from './routes/test.rout.js'
 import dotenv from 'dotenv'
+import pool from './db.js'
 
 
 
@@ -17,6 +18,18 @@ const app = express()
 app.use(express.json())
 
 
+
+
+// Connect database
+const connectDb = async () => {
+    try {
+      const client = await pool.connect();
+      console.log('Connected to the database');
+      client.release();
+    } catch (err) {
+      console.error('Database connection error', err.stack);
+    }
+  };
 
 
 //routes
@@ -41,4 +54,5 @@ app.use((err , req , res , next)=>{
 app.listen(3000,()=>{
    
    console.log('listning on port 3000')
+   connectDb()
 })
