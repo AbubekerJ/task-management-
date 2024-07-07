@@ -5,6 +5,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import pool from './db.js'
 import cookieParser from 'cookie-parser'
+import tasksRouter from './routes/tasks.route.js'
 
 
 
@@ -45,6 +46,7 @@ const connectDb = async () => {
 //routes
 app.use('/api' , auhtRouter)
 app.use('/api' , testRout)
+app.use('/api' , tasksRouter)
 
 //error handling midleware
 app.use((error,req,res,next)=>{

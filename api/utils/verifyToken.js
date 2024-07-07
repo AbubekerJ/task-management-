@@ -1,8 +1,8 @@
-import { createError } from "./createError"
+import { createError } from "./createError.js"
 import jwt from 'jsonwebtoken'
 
  const verifyToken = (req, res ,next)=>{
-    const token =req.cookie.access_token
+    const token = req.cookies.access_token
     if(!token){
         return next(createError(401 , 'Unautorized'))
 
@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken'
     jwt.verify(token , process.env.JWT_TOKEN , (err , user)=>{
         if(err){ return next(createError(401,'Forbidn'))}
         req.user=user
+        next()
     } )
 
 }

@@ -18,7 +18,7 @@ CREATE TABLE tasks (
     status BOOLEAN DEFAULT FALSE,
     created_by INT REFERENCES users(id) ON DELETE CASCADE,
     assigned_to INT REFERENCES users(id) ON DELETE SET NULL,
-    due_date TIMESTAMP,
+  
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  
 );
