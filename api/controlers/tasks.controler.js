@@ -40,7 +40,7 @@ export const deleteTask = async (req, res, next) => {
       return next(createError(404, 'Task Not Found'));
     }
 
-    if (req.user.id !== task.created_by) {
+    if (req.user.id !== task.created_by ) {
       return next(createError(401, 'You can only delete your task'));
     }
 
@@ -73,9 +73,10 @@ export const updateTask = async (req, res, next) => {
     }
 
   
-    if (req.user.id !== task.created_by) {
-      return next(createError(401, 'You can only update your task'));
-    }
+ if (req.user.id !== task.created_by && req.user.id !== task.assigned_to) {
+  return next(createError(401, 'You can only update your task'));
+}
+
 
     const result = await pool.query(
       'UPDATE tasks SET title = $1, description = $2, status = $3, assigned_to = $4 WHERE id = $5 RETURNING *',
@@ -87,6 +88,8 @@ export const updateTask = async (req, res, next) => {
     }
 
     res.status(200).json(result.rows[0]);
+  
+    
   } catch (error) {
     next(error);
   }
@@ -101,13 +104,13 @@ export const getUserTasks = async (req, res, next) => {
   const userId = req.user.id;
   const { status, sort } = req.query;
   
-  let query = 'SELECT * FROM tasks WHERE created_by = $1 OR assigned_to = $1';
+  let query = 'SELECT * FROM tasks WHERE (created_by = $1 OR assigned_to = $1)';
   const params = [userId];
 
   // Add status filter if provided
-  if (status) {
+  if (status === 'true' || status === 'false') {
     query += ' AND status = $2';
-    params.push(status);
+    params.push(status === 'true');
   }
 
   // Add sorting if provided

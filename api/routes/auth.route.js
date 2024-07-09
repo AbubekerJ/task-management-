@@ -1,5 +1,5 @@
 import express from 'express'
-import { register , signin } from '../controlers/auth.controler.js'
+import { register , signin, signOut } from '../controlers/auth.controler.js'
 
 
 
@@ -12,6 +12,9 @@ router.post('/register' , register)
 //signIn
 
 router.post('/signin' , signin)
+
+//signout
+router.get('/signout' ,signOut)
 
 
 

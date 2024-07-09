@@ -1,6 +1,6 @@
 import express from 'express'
 import auhtRouter from './routes/auth.route.js'
-import testRout from './routes/test.rout.js'
+import userRout from './routes/user.rout.js'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import pool from './db.js'
@@ -45,7 +45,7 @@ const connectDb = async () => {
 
 //routes
 app.use('/api' , auhtRouter)
-app.use('/api' , testRout)
+app.use('/api' , userRout)
 app.use('/api' , tasksRouter)
 
 //error handling midleware
