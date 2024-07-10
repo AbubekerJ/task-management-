@@ -20,7 +20,7 @@ export const CreateTask=async(req, res ,next)=>{
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    next(error);
+    next(createError(500 , 'Unable to connect to the server. Please check your network connection and try again.'));
   }
 }
 
@@ -52,7 +52,7 @@ export const deleteTask = async (req, res, next) => {
 
     res.status(200).json({ message: 'Task deleted successfully' });
   } catch (error) {
-    next(error);
+    next(createError(500 , 'Unable to connect to the server. Please check your network connection and try again.'));
   }
 };
 
@@ -91,7 +91,9 @@ export const updateTask = async (req, res, next) => {
   
     
   } catch (error) {
-    next(error);
+  
+      next(error);
+    
   }
 };
 
@@ -124,6 +126,6 @@ export const getUserTasks = async (req, res, next) => {
     const result = await pool.query(query, params);
     res.status(200).json(result.rows);
   } catch (error) {
-    next(error);
+    next(createError(500 , 'Unable to connect to the server. Please check your network connection and try again.'));
   }
 };

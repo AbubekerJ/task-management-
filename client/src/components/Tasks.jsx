@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import { FaEdit, FaTrash, FaCheck } from 'react-icons/fa';
 import TaskForm from './TaskForm';
 
-function Tasks({ task, fetchData, users }) {
+function Tasks({ task, fetchData, filteredUsers }) {
   const [isChecked, setIsChecked] = useState(task.status);
   const [showTaskForm, setShowTaskForm] = useState(false);
+  const [loading , setLoading] = useState(false)
+  const [error , setError] = useState(null)
 
   const handleCheckboxChange = async (e, theTask) => {
     const updatedStatus = e.target.checked;
     try {
+      setError(null)
+     
       const res = await fetch(`http://localhost:3000/api/updateTask/${theTask}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -23,31 +27,38 @@ function Tasks({ task, fetchData, users }) {
       });
       const data = await res.json();
       if (data.success === false) {
-        console.log(data.message);
+     setError(data.message)
         return;
       }
       console.log(data);
+      setError(null)
       setIsChecked(updatedStatus); // Update local state first
       fetchData(); // Then fetch the updated data
     } catch (error) {
-      console.log(error);
+      setError(error.message)
     }
   };
 
   const handleDelete = async (theTask) => {
     try {
+      setError(null)
       const res = await fetch(`http://localhost:3000/api/deleteTask/${theTask}`, {
         method: 'DELETE',
         credentials: 'include'
       });
       const data = await res.json();
       if (data.success === false) {
-        console.log(data.message);
+        setError(data.message)
+        setError(data.message)
         return;
       }
       fetchData();
     } catch (error) {
-      console.log(error);
+      if (error.message.includes('getaddrinfo ENOTFOUND')) {
+        setError('Unable to connect to the server. Please check your network connection and try again.');
+      } else {
+        setError('Internal Server Error, Make Sure you Are connected to the Internet');
+      }
     }
   };
 
@@ -62,7 +73,7 @@ function Tasks({ task, fetchData, users }) {
           </p>
           <p className="text-gray-500">
            
-            {task.assigned_to ? ' Assigned ' : ' | Unassigned'}
+            {task.assigned_to ? ' Assigned ' : '  Unassigned'}
           </p>
         </div>
         <div className="flex justify-end space-x-2">
@@ -83,9 +94,10 @@ function Tasks({ task, fetchData, users }) {
           </label>
         </div>
         <p className="text-gray-400 mt-4 text-sm">Created at: {new Date(task.created_at).toLocaleString()}</p>
+        <span className='text-red-800 text-sm' >{error?error:''}</span>
       </div>
       {showTaskForm && (
-        <TaskForm mode={'edit'} setShowTaskForm={setShowTaskForm} task={task} fetchData={fetchData} users={users} />
+        <TaskForm mode={'edit'} setShowTaskForm={setShowTaskForm} task={task} fetchData={fetchData} filteredUsers={filteredUsers} />
       )}
     </>
   );

@@ -39,7 +39,7 @@ const SignIn = () => {
       return;
     }
     dispatch(signInSuccess(data))
-    navigate('/')
+    navigate('/dashbord')
     
   } catch (error) {
     dispatch(signInFail(error.message))
@@ -55,6 +55,7 @@ const SignIn = () => {
         
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
+          required
             type="email"
             placeholder="Email"
             className="shadow appearance-none border border-gray-400 rounded w-full py-3 px-4 bg-white text-black leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -62,13 +63,14 @@ const SignIn = () => {
             onChange={handleChange}
           />
           <input
+          required
             type="password"
             placeholder="Password"
             className="shadow appearance-none border border-gray-400 rounded w-full py-3 px-4 bg-white text-black leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
             id="password"
             onChange={handleChange}
           />
-          <button
+          <button disabled={loading}
             className="border p-3 rounded-lg bg-blue-600 text-white uppercase hover:bg-gray-600 transition duration-300 ease-in-out"
           >
             {loading?'Loading...':'SignIn'}

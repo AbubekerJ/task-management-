@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Tasks from '../components/Tasks';
 import TaskForm from '../components/TaskForm';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { signOutSuccess, signOutFail, signOutStart } from '../redux/user/user.slice';
 
 function Dashboard() {
@@ -12,6 +12,11 @@ function Dashboard() {
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [users, setUsers] = useState([]);
   const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.user);
+
+
+  //filter the user that need to be assigned 
+  const filteredUsers = users.filter((user)=> user.id!=currentUser.id)
 
   // Fetch tasks and users
   const fetchData = async () => {
@@ -20,13 +25,10 @@ function Dashboard() {
         credentials: 'include',
       });
       
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
+    
 
       const data = await res.json();
-      console.log(data);
-
+      
       if (data.success === false) {
         console.log(data.message);
         setLoading(false);
@@ -85,7 +87,7 @@ function Dashboard() {
     }
   };
 
-  //fetch completed task 
+  //fetch completed tasks 
   const handleCompletedTask = async () => {
     try {
       const res = await fetch(`http://localhost:3000/api/getUserTasks?status=true`, {
@@ -93,21 +95,18 @@ function Dashboard() {
       });
       const data = await res.json();
       
-      if (res.ok) {
-        setTasks(data);
-      } else {
-        // Handle unsuccessful response
-        console.error('Failed to fetch tasks:', data.error);
-        setError(data.error);
-      }
+      if (data.success===false) {
+        setError(data.message);
+        return;
+      } 
+      setTasks(data)
     } catch (error) {
       console.error('Error fetching tasks:', error);
       setError(error);
     }
   };
-  
 
-  //fetch pendidng tasks
+  //fetch pending tasks
   const handlePendingTask = async () => {
     try {
       const res = await fetch(`http://localhost:3000/api/getUserTasks?status=false`, {
@@ -115,30 +114,30 @@ function Dashboard() {
       });
       const data = await res.json();
       
-      if (res.ok) {
-        setTasks(data);
-      } else {
-        // Handle unsuccessful response
-        console.error('Failed to fetch tasks:', data.error);
-        setError(data.error);
-      }
+      if (data.success===false) {
+        setError(data.message);
+        return;
+      } 
+      setTasks(data)
     } catch (error) {
       console.error('Error fetching tasks:', error);
       setError(error);
     }
   };
-  
 
   return (
     <>
       <div className="min-h-screen bg-gray-100 p-6">
         <div className="container mx-auto">
-          <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-            <div>
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center space-x-2">
+              <span  className="text-2xl">👋</span>
+              <h1 className="text-2xl font-bold">{`Hey, ${currentUser.username}`}</h1>
+            </div>
+            <div className='flex flex-col gap-1 sm:flex-row gap-2'>
               <button
                 onClick={() => setShowTaskForm(true)}
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 mr-2"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 "
               >
                 Add Task
               </button>
@@ -163,7 +162,7 @@ function Dashboard() {
           </div>
 
           <div className="flex justify-center space-x-4 mb-4">
-            <button  onClick={handleCompletedTask} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300">
+            <button onClick={handleCompletedTask} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition duration-300">
               Completed Tasks
             </button>
             <button onClick={handlePendingTask} className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-300">
@@ -180,14 +179,14 @@ function Dashboard() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {tasks.map((task) => (
-                <Tasks task={task} key={task.id} fetchData={fetchData} users={users} />
+                <Tasks task={task} key={task.id} fetchData={fetchData} filteredUsers={filteredUsers} />
               ))}
             </div>
           )}
         </div>
       </div>
 
-      {showTaskForm && <TaskForm mode={'create'} setShowTaskForm={setShowTaskForm} fetchData={fetchData} users={users} />}
+      {showTaskForm && <TaskForm mode={'create'} setShowTaskForm={setShowTaskForm} fetchData={fetchData}filteredUsers={filteredUsers} />}
     </>
   );
 }
