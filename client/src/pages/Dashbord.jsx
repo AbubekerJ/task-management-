@@ -31,6 +31,7 @@ function Dashboard() {
       
       if (data.success === false) {
         console.log(data.message);
+        setError(data.message)
         setLoading(false);
         return;
       }

@@ -62,7 +62,10 @@ export const signin = async (req, res, next) => {
 
     const { password: removedPassword, ...rest } = validUser;
 
-    res.cookie("access_token", token, { httpOnly: true, sameSite: "strict" }).json(rest);
+    res.cookie("access_token", token, { httpOnly: true,
+       sameSite: 'None', 
+      secure: true
+ }).json(rest);
 
   } catch (error) {
     next(createError(500 , 'Unable to connect to the server. Please check your network connection and try again.'));
