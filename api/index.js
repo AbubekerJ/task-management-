@@ -24,7 +24,7 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-  origin: ['http://localhost:5173' ,'https://task-management-4fyb.onrender.com'],
+  origin: ['http://localhost:5173' ,'https://task-management-4fyb.onrender.com' ,'https://task-management-ten-sand.vercel.app'],
   credentials: true 
 }));
 
