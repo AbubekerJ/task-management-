@@ -21,7 +21,7 @@ function Dashboard() {
   // Fetch tasks and users
   const fetchData = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/getUserTasks?sort=${sortOrder}`, {
+      const res = await fetch(`https://task-management-4fyb.onrender.com/api/getUserTasks?sort=${sortOrder}`, {
         credentials: 'include',
       });
       
@@ -47,7 +47,7 @@ function Dashboard() {
   // Fetch all users
   const getAllUsers = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/getalluser');
+      const res = await fetch('https://task-management-4fyb.onrender.com/api/getalluser');
       const data = await res.json();
 
       if (data.success === false) {
@@ -72,7 +72,7 @@ function Dashboard() {
   const handleSignOut = async () => {
     try {
       dispatch(signOutStart());
-      const res = await fetch('http://localhost:3000/api/signout');
+      const res = await fetch('https://task-management-4fyb.onrender.com/api/signout');
       const data = await res.json();
 
       if (data.success === false) {
@@ -90,7 +90,7 @@ function Dashboard() {
   //fetch completed tasks 
   const handleCompletedTask = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/getUserTasks?status=true`, {
+      const res = await fetch(`https://task-management-4fyb.onrender.com/api/getUserTasks?status=true`, {
         credentials: 'include'
       });
       const data = await res.json();
@@ -109,7 +109,7 @@ function Dashboard() {
   //fetch pending tasks
   const handlePendingTask = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/getUserTasks?status=false`, {
+      const res = await fetch(`https://task-management-4fyb.onrender.com/api/getUserTasks?status=false`, {
         credentials: 'include'
       });
       const data = await res.json();

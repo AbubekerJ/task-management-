@@ -1,6 +1,6 @@
 # Node.js modules
 api/node_modules/
-
+node_modules/
 # React modules
 client/node_modules/
 

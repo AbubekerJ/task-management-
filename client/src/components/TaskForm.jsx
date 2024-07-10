@@ -34,7 +34,7 @@ function TaskForm({ mode, setShowTaskForm, task, filteredUsers, fetchData }) {
     setLoading(true);
     try {
       if (editMode) {
-        const res = await fetch(`http://localhost:3000/api/updateTask/${task.id}`, {
+        const res = await fetch(`https://task-management-4fyb.onrender.com/api/updateTask/${task.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -52,7 +52,7 @@ function TaskForm({ mode, setShowTaskForm, task, filteredUsers, fetchData }) {
           setLoading(false);
         }
       } else {
-        const res = await fetch('http://localhost:3000/api/createtask', {
+        const res = await fetch('https://task-management-4fyb.onrender.com/api/createtask', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',

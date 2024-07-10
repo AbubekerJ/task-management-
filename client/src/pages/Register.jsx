@@ -18,7 +18,7 @@ const Register = () => {
     setLoading(true)
     setSignUpError(null)
       try {
-        const res =await fetch('http://localhost:3000/api/register',{
+        const res =await fetch('https://task-management-4fyb.onrender.com/api/register',{
           method:'POST',
           headers:{
           'Content-Type': 'application/json'

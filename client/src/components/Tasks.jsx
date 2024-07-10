@@ -13,7 +13,7 @@ function Tasks({ task, fetchData, filteredUsers }) {
     try {
       setError(null)
      
-      const res = await fetch(`http://localhost:3000/api/updateTask/${theTask}`, {
+      const res = await fetch(`https://task-management-4fyb.onrender.com/api/updateTask/${theTask}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -42,7 +42,7 @@ function Tasks({ task, fetchData, filteredUsers }) {
   const handleDelete = async (theTask) => {
     try {
       setError(null)
-      const res = await fetch(`http://localhost:3000/api/deleteTask/${theTask}`, {
+      const res = await fetch(`https://task-management-4fyb.onrender.com/api/deleteTask/${theTask}`, {
         method: 'DELETE',
         credentials: 'include'
       });
