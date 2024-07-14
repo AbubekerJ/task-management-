@@ -20,6 +20,7 @@ function Dashboard() {
 
   // Fetch tasks and users
   const fetchData = async () => {
+    setLoading(true)
     try {
       const res = await fetch(`https://task-management-4fyb.onrender.com/api/getUserTasks?sort=${sortOrder}`, {
         credentials: 'include',
